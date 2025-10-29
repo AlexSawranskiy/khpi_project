@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: white;
+  overflow: hidden;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  animation: fadeIn 1s ease forwards;
+}
+
+.wrapper {
+  width: 420px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  padding: 40px 45px;
+  text-align: center;
+  animation: fadeIn 1.2s ease forwards;
+}
+
+.wrapper h1 {
+  font-size: 36px;
+  margin-bottom: 25px;
+  animation: disco 4s infinite linear;
+}
+
+.input-box {
+  position: relative;
+  width: 100%;
+  margin: 25px 0;
+}
+
+.input-box input {
+  width: 100%;
+  height: 50px;
+  border-radius: 40px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  outline: none;
+  font-size: 16px;
+  color: white;
+  padding: 20px 45px 20px 20px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-box input::placeholder {
+  color: #ccc;
+}
+
+.input-box input:focus {
+  border-color: #3bd8ff;
+  box-shadow: 0 0 10px rgba(59, 216, 255, 0.4);
+}
+
+.input-box i {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #ccc;
+}
+
+.btn {
+  width: 100%;
+  height: 45px;
+  background: white;
+  color: #333;
+  font-weight: 600;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background: #3bd8ff;
+  color: white;
+  box-shadow: 0 0 15px rgba(59, 216, 255, 0.6);
+}
+
+.register-link {
+  font-size: 14.5px;
+  margin-top: 20px;
+}
+
+.register-link a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.register-link a:hover {
+  color: #3bd8ff;
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .wrapper {
+    width: 90%;
+    padding: 30px 25px;
+  }
+
+  .wrapper h1 {
+    font-size: 30px;
+  }
+
+  .btn {
+    height: 42px;
+  }
+}
