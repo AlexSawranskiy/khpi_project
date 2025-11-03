@@ -5,6 +5,7 @@ import Login from "./pages/Login/Login";
 import Register from "./pages/Authentication/Authentication";
 import Settings from "./pages/Settings/Settings";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Languages from "./pages/Languages/Languages";
 
 function RouterApp() {
   return (
@@ -15,6 +16,7 @@ function RouterApp() {
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Home />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/languages" element={<Languages />} />
       </Route>
     </Routes>
   );

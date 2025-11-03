@@ -22,3 +22,32 @@ def register_user(request):
   user = User.objects.create_user(username=username, email=email, password=password)
   user.save()
   return Response({'detail': 'Реєстрація успішна'}, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+def user_profile(request, user_id):
+  try:
+    user = User.objects.get(id=user_id)
+  except User.DoesNotExist:
+    return Response({'detail': 'Користувача не знайдено'}, status=status.HTTP_404_NOT_FOUND)
+
+  data = {
+    'id': user.id,
+    'username': user.username,
+    'email': user.email,
+    'date_joined': user.date_joined,
+    'ratinhg': user.rating,
+  }
+  return Response(data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_users_rating(request):
+  users = User.objects.all().order_by('-rating')
+  data = [
+    {
+      'id': user.id,
+      'username': user.username,
+      'rating': user.rating,
+    }
+      for user in users
+  ]
+  return Response(data, status=status.HTTP_200_OK)
