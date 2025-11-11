@@ -3,6 +3,8 @@ from django.db import models
 
 class User(AbstractUser):
   rating = models.PositiveIntegerField(default=0)
+  reset_token = models.CharField(max_length=255, null=True, blank=True)
+  reset_token_created_at = models.DateTimeField(null=True, blank=True)
 
   def __str__(self):
     return self.username

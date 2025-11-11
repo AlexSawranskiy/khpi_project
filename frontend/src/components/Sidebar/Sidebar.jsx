@@ -1,8 +1,12 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './Sidebar.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import "./Sidebar.css";
+import AuthService from "../../services/Auth.service";
 
 function Sidebar() {
+  const isAuthenticated = AuthService.isAuthenticated();
+  const userId = AuthService.getUserId();
+
   return (
     <div className="sidebar">
       <h2>Меню</h2>
@@ -11,20 +15,27 @@ function Sidebar() {
           <Link to="/">Головна</Link>
         </li>
         <li>
-          <Link to="/home">Мої досягнення</Link>
+          <Link to="/achievements">Мої досягнення</Link>
         </li>
         <li>
-          <Link to="/home">Оцінки</Link>
+          <Link to="/languages">Курси</Link>
         </li>
         <li>
-          <Link to="/home">Рівень знань</Link>
+          <Link to="/rating">Рейтинг</Link>
         </li>
         <li>
-          <Link to="/home">Налаштування</Link>
+          <Link to="/settings">Налаштування</Link>
         </li>
-        <li>
-          <Link to="/login">Вихід</Link>
-        </li>
+
+        {isAuthenticated ? (
+          <li>
+            <Link to={`/profile/${userId}`}>Профіль</Link>
+          </li>
+        ) : (
+          <li>
+            <Link to="/login">Увійти</Link>
+          </li>
+        )}
       </ul>
     </div>
   );

@@ -16,6 +16,10 @@ function LoginUser() {
   return (
     <div className="login-container">
       <div className="wrapper">
+        <button className="close-btn" onClick={() => navigate("/")}>
+          X
+        </button>
+        
         <h1>Login</h1>
 
         <form onSubmit={handleSubmit} noValidate>
@@ -42,7 +46,7 @@ function LoginUser() {
           </div>
 
           <div className="forget">
-            <a href="./forget_password.html">Forget password?</a>
+            <Link to="/forget-password">Forget password?</Link>
           </div>
 
           <button type="submit" className="btn">

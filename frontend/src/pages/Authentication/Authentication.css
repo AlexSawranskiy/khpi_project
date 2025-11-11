@@ -134,3 +134,14 @@ body {
     height: 42px;
   }
 }
+
+.close-btn {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  font-size: 20px;
+  color: #ccc;
+  cursor: pointer;
+  border: 0;
+  background: none;
+}

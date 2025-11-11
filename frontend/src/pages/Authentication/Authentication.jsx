@@ -18,6 +18,10 @@ function AuthUser() {
   return (
     <div className="login-container">
       <div className="wrapper">
+        <button className="close-btn" onClick={() => navigate("/")}>
+          X
+        </button>
+        
         <h1>Register</h1>
 
         <form onSubmit={handleSubmit} noValidate>

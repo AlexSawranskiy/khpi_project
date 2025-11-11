@@ -8,8 +8,10 @@ import "./App.css";
 function AppContent() {
   const location = useLocation();
 
-  const hideSidebarRoutes = ["/login", "/register"];
-  const shouldShowSidebar = !hideSidebarRoutes.includes(location.pathname);
+  const hideSidebarRoutes = ["/login", "/register", "/forget-password", "/reset-password"];
+  const shouldShowSidebar = !hideSidebarRoutes.some((path) =>
+    location.pathname.startsWith(path)
+  );
 
   return (
     <div className="app-container" style={{ display: "flex" }}>
