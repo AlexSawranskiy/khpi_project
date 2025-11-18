@@ -104,37 +104,37 @@ def view_tasks_list(request, exercise_id):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def mark_lesson_complete(request, lesson_id):
-    user = request.user
+  user = request.user
 
-    try:
-        lesson = Lessons.objects.get(id=lesson_id)
-    except Lessons.DoesNotExist:
-        return Response({'detail': 'Lesson not found'}, status=status.HTTP_404_NOT_FOUND)
+  try:
+    lesson = Lessons.objects.get(id=lesson_id)
+  except Lessons.DoesNotExist:
+    return Response({'detail': 'Lesson not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    progress, _ = UserLessonProgress.objects.get_or_create(user=user, lesson=lesson)
+  progress, _ = UserLessonProgress.objects.get_or_create(user=user, lesson=lesson)
 
-    progress.is_completed = True
-    progress.progress_percent = 100.0
-    progress.completed_at = timezone.now()
-    progress.save()
+  progress.is_completed = True
+  progress.progress_percent = 100.0
+  progress.completed_at = timezone.now()
+  progress.save()
 
-    return Response({'detail': 'Lesson marked as completed'}, status=status.HTTP_200_OK)
+  return Response({'detail': 'Lesson marked as completed'}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def mark_exercise_completed(request, exercise_id):
-    user = request.user
+  user = request.user
 
-    try:
-        exercise = Exercises.objects.get(id=exercise_id)
-    except Exercises.DoesNotExist:
-        return Response({'detail': 'Exercise not found'}, status=status.HTTP_404_NOT_FOUND)
+  try:
+    exercise = Exercises.objects.get(id=exercise_id)
+  except Exercises.DoesNotExist:
+    return Response({'detail': 'Exercise not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    progress, _ = UserExerciseProgress.objects.get_or_create(user=user, exercise=exercise)
+  progress, _ = UserExerciseProgress.objects.get_or_create(user=user, exercise=exercise)
 
-    progress.is_completed = True
-    progress.completed_at = timezone.now()
-    progress.save()
+  progress.is_completed = True
+  progress.completed_at = timezone.now()
+  progress.save()
 
-    return Response({'detail': 'Exercise marked as completed'}, status=status.HTTP_200_OK)
+  return Response({'detail': 'Exercise marked as completed'}, status=status.HTTP_200_OK)

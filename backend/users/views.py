@@ -126,36 +126,36 @@ def reset_password_confirm(request, token):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def apply_exercise_score(request, exercise_id):
-    user = request.user
-    score = request.data.get('score')
+  user = request.user
+  score = request.data.get('score')
 
-    if score is None:
-        return Response({'detail': 'score обовʼязковий'}, status=status.HTTP_400_BAD_REQUEST)
+  if score is None:
+    return Response({'detail': 'score обовʼязковий'}, status=status.HTTP_400_BAD_REQUEST)
 
-    try:
-        score = int(score)
-    except ValueError:
-        return Response({'detail': 'score має бути числом'}, status=status.HTTP_400_BAD_REQUEST)
+  try:
+    score = int(score)
+  except ValueError:
+    return Response({'detail': 'score має бути числом'}, status=status.HTTP_400_BAD_REQUEST)
 
-    tasks = Tasks.objects.filter(exercise_id=exercise_id)
-    if not tasks.exists():
-        return Response({'detail': 'Exercise не знайдено'}, status=status.HTTP_404_NOT_FOUND)
+  tasks = Tasks.objects.filter(exercise_id=exercise_id)
+  if not tasks.exists():
+    return Response({'detail': 'Exercise не знайдено'}, status=status.HTTP_404_NOT_FOUND)
 
-    max_score = 0
-    for task in tasks:
-        if task.task_type == 'choice':
-            max_score += 5
-        elif task.task_type == 'text':
-            max_score += 15
+  max_score = 0
+  for task in tasks:
+    if task.task_type == 'choice':
+      max_score += 5
+    elif task.task_type == 'text':
+      max_score += 15
 
-    if score > max_score:
-        return Response({'detail': 'score некоректний'}, status=status.HTTP_400_BAD_REQUEST)
+  if score > max_score:
+    return Response({'detail': 'score некоректний'}, status=status.HTTP_400_BAD_REQUEST)
 
-    user.rating += score
-    user.save()
+  user.rating += score
+  user.save()
 
-    return Response({
-        "detail": "Рейтинг оновлено",
-        "added_score": score,
-        "new_rating": user.rating
-    }, status=status.HTTP_200_OK)
+  return Response({
+    "detail": "Рейтинг оновлено",
+    "added_score": score,
+    "new_rating": user.rating
+  }, status=status.HTTP_200_OK)
