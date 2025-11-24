@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import register_user, user_profile, get_users_rating, reset_password, reset_password_confirm, validate_reset_token
+from .views import register_user, user_profile, get_users_rating, reset_password, reset_password_confirm, validate_reset_token, apply_exercise_score
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -11,5 +11,5 @@ urlpatterns = [
     path('reset-password/', reset_password),
     path('reset-password/<str:token>/', validate_reset_token),
     path('reset-password-confirm/<str:token>/', reset_password_confirm),
-
+    path('exercise/<int:exercise_id>/apply-score/', apply_exercise_score),
 ]
