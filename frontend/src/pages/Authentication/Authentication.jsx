@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Authentication.css';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { registerUser } from '../../services/Auth.service';
 
 function AuthUser() {
@@ -8,21 +8,34 @@ function AuthUser() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await registerUser(username, email, password, confirmPassword, navigate);
+    setError('');
+    
+    if (password !== confirmPassword) {
+      setError("Passwords don't match");
+      return;
+    }
+
+    try {
+      await registerUser(username, email, password, confirmPassword, navigate);
+    } catch (err) {
+      setError(err.message || 'An error occurred during registration');
+    }
   };
 
   return (
-    <div className="login-container">
+    <div className="register-container">
       <div className="wrapper">
         <button className="close-btn" onClick={() => navigate("/")}>
-          X
+          <i className="bx bx-x"></i>
         </button>
         
-        <h1>Register</h1>
+        <h1>Create Account</h1>
+        {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="input-box">

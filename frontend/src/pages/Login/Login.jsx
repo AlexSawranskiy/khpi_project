@@ -6,21 +6,28 @@ import { loginUser } from '../../services/Auth.service';
 function LoginUser() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await loginUser(username, password, navigate);
+    setError('');
+    try {
+      await loginUser(username, password, navigate);
+    } catch (err) {
+      setError(err.message || 'An error occurred during login');
+    }
   };
 
   return (
     <div className="login-container">
       <div className="wrapper">
         <button className="close-btn" onClick={() => navigate("/")}>
-          X
+          <i className="bx bx-x"></i>
         </button>
         
         <h1>Login</h1>
+        {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="input-box">
@@ -46,7 +53,7 @@ function LoginUser() {
           </div>
 
           <div className="forget">
-            <Link to="/forget-password">Forget password?</Link>
+            <Link to="/forget-password">Forgot Password?</Link>
           </div>
 
           <button type="submit" className="btn">

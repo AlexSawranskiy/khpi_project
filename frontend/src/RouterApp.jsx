@@ -11,6 +11,8 @@ import ForgetPassword from "./pages/Forget Password/ForgetPassword";
 import ResetPasswordConfirm from "./pages/Forget Password/ResetPasswordConfirm";
 import Lessons from './pages/Lessons/Lessons';
 import Exercise from './pages/Exercise/Exercise';
+import Achievements from './pages/Achievements/Achievements';
+import Rating from './pages/Rating/Rating';
 
 function RouterApp() {
   return (
@@ -27,6 +29,8 @@ function RouterApp() {
         <Route path="/profile/:userId" element={<Profile />} />
         <Route path="/lessons/:courseId" element={<Lessons />} />
         <Route path="/:lessonId/exercises" element={<Exercise />} />
+        <Route path="/achievements" element={<Achievements />} />
+        <Route path="/rating" element={<Rating />} />
       </Route>
     </Routes>
   );

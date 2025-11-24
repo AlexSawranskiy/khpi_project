@@ -4,7 +4,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 body {
@@ -12,39 +12,65 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  color: white;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  color: #fff;
   overflow: hidden;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.login-container {
+.login-container, .register-container {
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  animation: fadeIn 1s ease forwards;
+  padding: 20px;
 }
 
 .wrapper {
-  width: 420px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 15px;
-  backdrop-filter: blur(20px);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-  padding: 40px 45px;
-  text-align: center;
-  animation: fadeIn 1.2s ease forwards;
+  width: 100%;
+  max-width: 450px;
+  background: rgba(26, 26, 46, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  padding: 40px 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+.wrapper::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+  transform: rotate(45deg);
+  pointer-events: none;
 }
 
 .wrapper h1 {
-  font-size: 36px;
-  margin-bottom: 25px;
-  animation: disco 4s infinite linear;
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.error-message {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+  padding: 12px 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  border-left: 3px solid #ff6b6b;
 }
 
 .input-box {
