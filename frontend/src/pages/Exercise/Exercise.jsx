@@ -37,18 +37,26 @@ function Exercise() {
   useEffect(() => {
     const fetchExercises = async () => {
       try {
-        const [exercisesResponse] = await Promise.all([
-          fetch(`${process.env.REACT_APP_API_URL}courses/${lessonId}/exercises/`),
+        setLoading(true);
+        const token = localStorage.getItem("access");
+        
+        const [exercisesResponse, completedResponse] = await Promise.all([
+          fetch(`${process.env.REACT_APP_API_URL}courses/lesson/${lessonId}/exercises/`, {
+            headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+          }),
           fetchCompletedExercises()
         ]);
         
-        if (!exercisesResponse.ok) throw new Error("Не вдалося завантажити вправи");
+        if (!exercisesResponse.ok) {
+          const errorData = await exercisesResponse.json().catch(() => ({}));
+          throw new Error(errorData.detail || "Не вдалося завантажити вправи");
+        }
         
         const data = await exercisesResponse.json();
-        setExercises(data);
+        setExercises(Array.isArray(data) ? data : []);
       } catch (error) {
-        console.error(error);
-        toast.error("Помилка при завантаженні вправ 😢");
+        console.error("Error fetching exercises:", error);
+        toast.error(error.message || "Помилка при завантаженні вправ");
       } finally {
         setLoading(false);
       }

@@ -11,12 +11,39 @@ function Lessons() {
   const [completedLessons, setCompletedLessons] = useState([]);
   const navigate = useNavigate();
 
+  // Function to fetch completed lessons
+  const fetchCompletedLessons = async () => {
+    const token = localStorage.getItem("access");
+    if (!token) return;
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}courses/completed/`,
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        const completedIds = data.completed_lessons || [];
+        setCompletedLessons(completedIds);
+      }
+    } catch (error) {
+      console.error("Помилка при завантаженні завершених уроків:", error);
+    }
+  };
+
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}courses/${courseId}/`)
       .then((response) => response.json())
       .then((data) => {
         setLessons(data);
         setLoading(false);
+        // Fetch completed lessons after loading the course
+        fetchCompletedLessons();
       })
       .catch((error) => {
         console.error("Помилка при завантаженні уроків:", error);
