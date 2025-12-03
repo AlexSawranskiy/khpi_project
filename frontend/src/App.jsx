@@ -1,5 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, useLocation } from "react-router-dom";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { LanguageProvider } from "./contexts/LanguageContext";
 import Sidebar from "./components/Sidebar/Sidebar";
 import RouterApp from "./RouterApp";
 import { ToastContainer } from "react-toastify";
@@ -47,9 +49,13 @@ function AppContent() {
 
 function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <LanguageProvider>
+      <ThemeProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </ThemeProvider>
+    </LanguageProvider>
   );
 }
 

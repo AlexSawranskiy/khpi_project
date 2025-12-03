@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useLanguage } from "../../contexts/LanguageContext";
 import "./Profile.css";
 import AuthService from "../../services/Auth.service";
 
@@ -7,7 +8,9 @@ function Profile() {
   const { userId } = useParams();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}api/profile/${userId}/`, {
@@ -17,7 +20,7 @@ function Profile() {
     })
       .then((res) => {
         if (!res.ok) {
-          throw new Error("Користувача не знайдено");
+          throw new Error(t('profile.userNotFound'));
         }
         return res.json();
       })
@@ -26,7 +29,8 @@ function Profile() {
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Помилка завантаження профілю:", err);
+        console.error(t('profile.loadError'), err);
+        setError(err.message);
         setLoading(false);
       });
   }, [userId]);
@@ -36,20 +40,20 @@ function Profile() {
     navigate("/");
   };
 
-  if (loading) return <p>Завантаження...</p>;
-  if (!user) return <p>Користувача не знайдено</p>;
+  if (loading) return <p>{t('common.loading')}...</p>;
+  if (!user) return <p>{error || t('profile.userNotFound')}</p>;
 
   return (
     <div className="profile-page">
-      <h1>Профіль користувача</h1>
+      <h1>{t('profile.title')}</h1>
       <div className="profile-card">
-        <p><strong>Ім'я користувача:</strong> {user.username}</p>
-        <p><strong>Email:</strong> {user.email}</p>
-        <p><strong>Дата реєстрації:</strong> {new Date(user.date_joined).toLocaleDateString()}</p>
-        <p><strong>Рейтинг:</strong> {user.rating}</p>
+        <p><strong>{t('profile.username')}:</strong> {user.username}</p>
+        <p><strong>{t('profile.email')}:</strong> {user.email}</p>
+        <p><strong>{t('profile.registrationDate')}:</strong> {new Date(user.date_joined).toLocaleDateString()}</p>
+        <p><strong>{t('profile.rating')}:</strong> {user.rating}</p>
 
         <button className="logout-btn" onClick={handleLogout}>
-          Вийти
+          {t('navigation.logout')}
         </button>
       </div>
     </div>

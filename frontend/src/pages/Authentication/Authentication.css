@@ -132,18 +132,30 @@ body {
 .register-link {
   font-size: 14.5px;
   margin-top: 20px;
+  color: #ffffff !important;
+  text-align: center;
+}
+
+.register-link p {
+  color: #ffffff !important;
+  margin-bottom: 0;
 }
 
 .register-link a {
-  color: white;
+  color: #3bd8ff !important;
   text-decoration: none;
   font-weight: 600;
-  transition: color 0.3s;
+  transition: all 0.3s ease;
+  margin-left: 5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(59, 216, 255, 0.1);
 }
 
 .register-link a:hover {
-  color: #3bd8ff;
-  text-decoration: underline;
+  color: #ffffff !important;
+  background: rgba(59, 216, 255, 0.3);
+  text-decoration: none;
 }
 
 @media (max-width: 480px) {

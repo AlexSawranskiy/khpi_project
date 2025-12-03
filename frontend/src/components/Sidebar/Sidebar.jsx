@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaHome, FaTrophy, FaBook, FaChartLine, FaCog, FaUser, FaSignInAlt, FaBars, FaTimes, FaStar } from "react-icons/fa";
+import { FaHome, FaTrophy, FaBook, FaCog, FaUser, FaSignInAlt, FaBars, FaTimes, FaStar } from "react-icons/fa";
+import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import "./Sidebar.css";
 import AuthService from "../../services/Auth.service";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { t, language, changeLanguage } = useLanguage();
   const isAuthenticated = AuthService.isAuthenticated();
   const userId = AuthService.getUserId();
 
@@ -57,34 +60,34 @@ function Sidebar() {
       </button>
       
       <div className={`sidebar ${isOpen ? 'active' : ''}`}>
-        <h2>Меню</h2>
+        <h2>{t('sidebar.menu')}</h2>
         <ul>
           <li>
             <Link to="/" className={isActive('/') ? 'active' : ''}>
               <FaHome className="icon" />
-              <span>Головна</span>
+              <span>{t('sidebar.home')}</span>
             </Link>
           </li>
           <li>
             <Link to="/achievements" className={isActive('/achievements') ? 'active' : ''}>
               <FaTrophy className="icon" />
-              <span>Досягнення</span>
+              <span>{t('sidebar.achievements')}</span>
             </Link>
             <Link to="/rating" className={isActive('/rating') ? 'active' : ''}>
               <FaStar className="icon" />
-              <span>Рейтинг</span>
+              <span>{t('sidebar.rating')}</span>
             </Link>
           </li>
           <li>
             <Link to="/languages" className={isActive('/languages') ? 'active' : ''}>
               <FaBook className="icon" />
-              <span>Курси</span>
+              <span>{t('sidebar.courses')}</span>
             </Link>
           </li>
           <li>
             <Link to="/settings" className={isActive('/settings') ? 'active' : ''}>
               <FaCog className="icon" />
-              <span>Налаштування</span>
+              <span>{t('sidebar.settings')}</span>
             </Link>
           </li>
 
@@ -92,17 +95,20 @@ function Sidebar() {
             <li>
               <Link to={`/profile/${userId}`} className={isActive(`/profile/${userId}`) ? 'active' : ''}>
                 <FaUser className="icon" />
-                <span>Профіль</span>
+                <span>{t('sidebar.profile')}</span>
               </Link>
             </li>
           ) : (
             <li>
               <Link to="/login" className={isActive('/login') ? 'active' : ''}>
                 <FaSignInAlt className="icon" />
-                <span>Увійти</span>
+                <span>{t('login.loginButton')}</span>
               </Link>
             </li>
           )}
+          <li className="theme-toggle-container">
+            <ThemeToggle />
+          </li>
         </ul>
       </div>
     </>

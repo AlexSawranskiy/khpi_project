@@ -1,0 +1,45 @@
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.theme-toggle:hover {
+  background-color: var(--bg-hover);
+}
+
+.theme-icon {
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover .theme-icon {
+  transform: rotate(20deg);
+}
+
+.theme-text {
+  white-space: nowrap;
+}
+
+/* For mobile view */
+@media (max-width: 768px) {
+  .theme-text {
+    display: none;
+  }
+  
+  .theme-toggle {
+    padding: 8px;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    justify-content: center;
+  }
+}

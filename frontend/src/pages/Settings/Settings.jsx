@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiUser, FiMoon, FiSun, FiBell, FiGlobe, FiLock, FiLogOut } from 'react-icons/fi';
+import { useTheme } from '../../contexts/ThemeContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 import './Settings.css';
 
 function Settings() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [language, setLanguage] = useState('ukrainian');
+  const { theme, toggleTheme } = useTheme();
+  const { language, changeLanguage, t } = useLanguage();
   const [notifications, setNotifications] = useState(true);
   const navigate = useNavigate();
 
@@ -17,7 +19,7 @@ function Settings() {
   return (
     <div className="settings-container">
       <div className="settings-header">
-        <h1>Налаштування</h1>
+        <h1>{t('settings.title')}</h1>
       </div>
       
       <div className="settings-section">
@@ -26,24 +28,24 @@ function Settings() {
             <FiUser size={20} />
           </div>
           <div className="settings-item-content">
-            <h3>Профіль</h3>
-            <p>Змінити інформацію про профіль</p>
+            <h3>{t('settings.profile.title')}</h3>
+            <p>{t('settings.profile.description')}</p>
           </div>
         </div>
         
         <div className="settings-item">
           <div className="settings-item-icon">
-            {darkMode ? <FiSun size={20} /> : <FiMoon size={20} />}
+            {theme === 'dark' ? <FiSun size={20} /> : <FiMoon size={20} />}
           </div>
           <div className="settings-item-content">
-            <h3>Темна тема</h3>
-            <p>Увімкнути темний режим</p>
+            <h3>{t('settings.theme.title')}</h3>
+            <p>{t('settings.theme.description')}</p>
           </div>
           <label className="switch">
             <input 
               type="checkbox" 
-              checked={darkMode} 
-              onChange={() => setDarkMode(!darkMode)} 
+              checked={theme === 'dark'}
+              onChange={toggleTheme}
             />
             <span className="slider round"></span>
           </label>
@@ -54,16 +56,16 @@ function Settings() {
             <FiGlobe size={20} />
           </div>
           <div className="settings-item-content">
-            <h3>Мова</h3>
-            <p>Оберіть мову інтерфейсу</p>
+            <h3>{t('settings.language.title')}</h3>
+            <p>{t('settings.language.description')}</p>
           </div>
           <select 
             className="language-select"
             value={language}
-            onChange={(e) => setLanguage(e.target.value)}
+            onChange={(e) => changeLanguage(e.target.value)}
           >
-            <option value="ukrainian">Українська</option>
-            <option value="english">English</option>
+            <option value="ukrainian">{t('settings.language.ukrainian')}</option>
+            <option value="english">{t('settings.language.english')}</option>
           </select>
         </div>
         
@@ -72,8 +74,8 @@ function Settings() {
             <FiBell size={20} />
           </div>
           <div className="settings-item-content">
-            <h3>Сповіщення</h3>
-            <p>Керування сповіщеннями</p>
+            <h3>{t('settings.notifications.title')}</h3>
+            <p>{t('settings.notifications.description')}</p>
           </div>
           <label className="switch">
             <input 
@@ -90,8 +92,8 @@ function Settings() {
             <FiLock size={20} />
           </div>
           <div className="settings-item-content">
-            <h3>Безпека</h3>
-            <p>Змінити пароль та налаштування безпеки</p>
+            <h3>{t('settings.security.title')}</h3>
+            <p>{t('settings.security.description')}</p>
           </div>
         </div>
         
@@ -100,8 +102,7 @@ function Settings() {
             <FiLogOut size={20} />
           </div>
           <div className="settings-item-content">
-            <h3>Вийти</h3>
-            <p>Вийти з облікового запису</p>
+            <h3>{t('settings.logout')}</h3>
           </div>
         </div>
       </div>

@@ -1,32 +1,25 @@
 import React, { useEffect } from "react";
 import "./Home.css";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 function Home() {
+  const { t } = useLanguage();
+  
   useEffect(() => {
-    document.title = "Home · KHPI Project";
-  }, []);
+    document.title = t('home.title') + " · KHPI Project";
+  }, [t]);
 
   return (
     <main className="home-page">
       <div className="container">
         <div className="content">
           <div>
-            <h1>Вітаємо на головній сторінці!</h1>
-            <p>
-              Ви увійшли до системи вивчення іноземних мов — простору, де навчання стає цікавим, а результати легко відстежувати.
-              Тут ви можете переглядати свої оцінки, аналізувати досягнення та стежити за власним рівнем володіння мовою.
-            </p>
-            <p>
-              У розділі «Мої досягнення» ви знайдете пройдені теми, виконані завдання та нагороди за успішні результати.
-              Сторінка «Оцінки» дозволяє бачити детальний прогрес, а «Рівень знань» — допоможе оцінити, наскільки ви наблизились до своєї мети.
-            </p>
-            <p>
-              Налаштуйте свій профіль у розділі «Налаштування», щоб зробити навчання ще комфортнішим.
-              Ми раді вітати вас у нашій спільноті та бажаємо успіхів на шляху до вивчення іноземних мов!
-            </p>
+            <h1>{t('home.welcome')}</h1>
+            <p>{t('home.description1')}</p>
+            <p>{t('home.description2')}</p>
+            <p>{t('home.description3')}</p>
           </div>
         </div>
-
       </div>
     </main>
   );

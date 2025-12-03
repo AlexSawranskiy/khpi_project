@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../../contexts/LanguageContext';
 import './Achievements.css';
 import { FaTrophy, FaBook, FaStar, FaChartLine, FaCheckCircle } from 'react-icons/fa';
 
@@ -7,6 +8,7 @@ function Achievements() {
   const [achievements, setAchievements] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   // Mock data - replace with actual API calls
   useEffect(() => {
@@ -19,17 +21,17 @@ function Achievements() {
         
         // Mock data
         const mockAchievements = [
-          { id: 1, title: 'Перший крок', description: 'Завершено перший урок', icon: '🥇', earned: true, date: '2023-11-20' },
-          { id: 2, title: 'Мовний ентузіаст', description: 'Завершено 10 уроків', icon: '🎯', earned: true, date: '2023-11-22' },
-          { id: 3, title: 'Майстер слів', description: 'Вивчено 100 слів', icon: '📚', earned: false },
-          { id: 4, title: 'Серія перемог', description: '5 днів поспіль навчання', icon: '🔥', earned: true, date: '2023-11-24' },
-          { id: 5, title: 'Перфекціоніст', description: 'Пройдено тест з 100% результатом', icon: '💯', earned: false },
+          { id: 1, title: t('achievements.firstStep'), description: t('achievements.firstStepDesc'), icon: '🥇', earned: true, date: '2023-11-20' },
+          { id: 2, title: t('achievements.languageEnthusiast'), description: t('achievements.languageEnthusiastDesc'), icon: '🎯', earned: true, date: '2023-11-22' },
+          { id: 3, title: t('achievements.wordMaster'), description: t('achievements.wordMasterDesc'), icon: '📚', earned: false },
+          { id: 4, title: t('achievements.winningStreak'), description: t('achievements.winningStreakDesc'), icon: '🔥', earned: true, date: '2023-11-24' },
+          { id: 5, title: t('achievements.perfectionist'), description: t('achievements.perfectionistDesc'), icon: '💯', earned: false },
         ];
         
         setAchievements(mockAchievements);
         setLoading(false);
       } catch (error) {
-        console.error('Помилка при завантаженні досягнень:', error);
+        console.error(t('achievements.loadError'), error);
         setLoading(false);
       }
     };
@@ -53,7 +55,7 @@ function Achievements() {
     return (
       <div className="achievements-loading">
         <div className="spinner"></div>
-        <p>Завантаження досягнень...</p>
+        <p>{t('achievements.loading')}</p>
       </div>
     );
   }
@@ -61,15 +63,15 @@ function Achievements() {
   return (
     <div className="achievements-container">
       <header className="achievements-header">
-        <h1><FaTrophy className="header-icon" /> Мої досягнення</h1>
-        <p>Відстежуйте свій прогрес та досягнення</p>
+        <h1><FaTrophy className="header-icon" /> {t('achievements.title')}</h1>
+        <p>{t('achievements.subtitle')}</p>
       </header>
 
       <section className="stats-overview">
         <div className="stat-card">
           <div className="stat-icon"><FaBook /></div>
           <div className="stat-details">
-            <h3>Уроки</h3>
+            <h3>{t('achievements.lessons')}</h3>
             <p>{stats.completedLessons} / {stats.totalLessons}</p>
             <div className="progress-bar">
               <div 
@@ -77,14 +79,14 @@ function Achievements() {
                 style={{ width: `${progressPercentage}%` }}
               ></div>
             </div>
-            <span className="progress-percent">{progressPercentage}% завершено</span>
+            <span className="progress-percent">{progressPercentage}% {t('achievements.completed')}</span>
           </div>
         </div>
 
         <div className="stat-card">
           <div className="stat-icon"><FaStar /></div>
           <div className="stat-details">
-            <h3>Слова</h3>
+            <h3>{t('achievements.words')}</h3>
             <p>{stats.learnedWords} / {stats.totalWords}</p>
             <div className="progress-bar">
               <div 
@@ -92,22 +94,22 @@ function Achievements() {
                 style={{ width: `${wordsPercentage}%` }}
               ></div>
             </div>
-            <span className="progress-percent">{wordsPercentage}% вивчено</span>
+            <span className="progress-percent">{wordsPercentage}% {t('achievements.learned')}</span>
           </div>
         </div>
 
         <div className="stat-card">
           <div className="stat-icon"><FaChartLine /></div>
           <div className="stat-details">
-            <h3>Серія занять</h3>
-            <p className="streak">{stats.streakDays} днів поспіль</p>
-            <p className="xp">Загалом: {stats.totalXP} XP</p>
+            <h3>{t('achievements.streak')}</h3>
+            <p className="streak-days">{stats.streakDays} {t('achievements.days')} {t('achievements.inARow')}</p>
+            <p className="xp">{t('achievements.totalXP', { xp: stats.totalXP })}</p>
           </div>
         </div>
       </section>
 
       <section className="achievements-section">
-        <h2>Мої нагороди</h2>
+        <h2>{t('achievements.myAchievements')}</h2>
         <div className="achievements-grid">
           {achievements.map((achievement) => (
             <div 
@@ -116,9 +118,9 @@ function Achievements() {
             >
               <div className="achievement-icon">
                 {achievement.earned ? (
-                  <span className="icon">{achievement.icon}</span>
+                  <span role="img" aria-label="Achievement">{achievement.icon}</span>
                 ) : (
-                  <span className="icon">🔒</span>
+                  <span className="locked-icon">🔒</span>
                 )}
               </div>
               <div className="achievement-details">
@@ -127,7 +129,7 @@ function Achievements() {
                 {achievement.earned && (
                   <div className="achievement-date">
                     <FaCheckCircle className="check-icon" />
-                    <span>Отримано: {achievement.date}</span>
+                    <span>{t('achievements.earnedOn')} {new Date(achievement.date).toLocaleDateString()}</span>
                   </div>
                 )}
               </div>
