@@ -1,1 +1,0 @@
-# khpi_project

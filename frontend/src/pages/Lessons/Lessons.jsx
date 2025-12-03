@@ -57,7 +57,7 @@ function Lessons() {
         setCompletedLessons((prev) => [...prev, lessonId]);
       } else {
         const data = await response.json();
-        toast.error(data.detail || "Помилка при позначенні уроку");
+        toast.error("Помилка при позначенні уроку");
       }
     } catch (err) {
       toast.error("Помилка підключення до сервера");

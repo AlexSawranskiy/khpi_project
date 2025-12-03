@@ -12,4 +12,6 @@ urlpatterns = [
     path('reset-password/<str:token>/', validate_reset_token),
     path('reset-password-confirm/<str:token>/', reset_password_confirm),
     path('exercise/<int:exercise_id>/apply-score/', apply_exercise_score),
+    path('api/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

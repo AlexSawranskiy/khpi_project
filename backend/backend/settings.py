@@ -89,7 +89,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         "NAME": "database",
         "USER": "postgres",
-        "PASSWORD": "2005",
+        "PASSWORD": "nick2006",
         "HOST": "127.0.0.1",
         "PORT": "5432",
     }
@@ -155,3 +155,29 @@ EMAIL_HOST_PASSWORD = 'gvftdgodzrimtpxh'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 FRONTEND_URL = "http://localhost:3000"
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    )
+}
+
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+] + MIDDLEWARE
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_HEADERS = [
+    "authorization",
+    "content-type",
+    "accept",
+    "origin",
+    "user-agent",
+    "accept-encoding",
+]
+
+CORS_ALLOW_CREDENTIALS = True
