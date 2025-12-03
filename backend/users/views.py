@@ -126,36 +126,57 @@ def reset_password_confirm(request, token):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def apply_exercise_score(request, exercise_id):
-  user = request.user
-  score = request.data.get('score')
+    user = request.user
+    score = request.data.get('score')
 
-  if score is None:
-    return Response({'detail': 'score обовʼязковий'}, status=status.HTTP_400_BAD_REQUEST)
+    if score is None:
+        return Response({'detail': 'score обовʼязковий'}, status=status.HTTP_400_BAD_REQUEST)
 
-  try:
-    score = int(score)
-  except ValueError:
-    return Response({'detail': 'score має бути числом'}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        score = int(score)
+    except ValueError:
+        return Response({'detail': 'score має бути числом'}, status=status.HTTP_400_BAD_REQUEST)
 
-  tasks = Tasks.objects.filter(exercise_id=exercise_id)
-  if not tasks.exists():
-    return Response({'detail': 'Exercise не знайдено'}, status=status.HTTP_404_NOT_FOUND)
+    tasks = Tasks.objects.filter(exercise_id=exercise_id)
+    if not tasks.exists():
+        return Response({'detail': 'Exercise не знайдено'}, status=status.HTTP_404_NOT_FOUND)
 
-  max_score = 0
-  for task in tasks:
-    if task.task_type == 'choice':
-      max_score += 5
-    elif task.task_type == 'text':
-      max_score += 15
+    # Check if user has already completed this exercise
+    if not hasattr(user, 'completed_exercises'):
+        user.completed_exercises = {}
+    
+    # If user already completed this exercise, return current rating
+    if str(exercise_id) in user.completed_exercises:
+        return Response({
+            "detail": "Ви вже виконали це завдання",
+            "added_score": 0,
+            "new_rating": user.rating
+        }, status=status.HTTP_200_OK)
 
-  if score > max_score:
-    return Response({'detail': 'score некоректний'}, status=status.HTTP_400_BAD_REQUEST)
+    max_score = 0
+    for task in tasks:
+        if task.task_type == 'choice':
+            max_score += 5
+        elif task.task_type == 'text':
+            max_score += 15
 
-  user.rating += score
-  user.save()
+    if score > max_score:
+        return Response({'detail': 'score некоректний'}, status=status.HTTP_400_BAD_REQUEST)
+    if score < 0:
+        return Response({'detail': 'score не може бути відʼємним'}, status=status.HTTP_400_BAD_REQUEST)
 
-  return Response({
-    "detail": "Рейтинг оновлено",
-    "added_score": score,
-    "new_rating": user.rating
-  }, status=status.HTTP_200_OK)
+    # Update user's rating and mark exercise as completed
+    user.rating += score
+    if not user.completed_exercises:
+        user.completed_exercises = {}
+    user.completed_exercises[str(exercise_id)] = {
+        'score': score,
+        'completed_at': timezone.now().isoformat()
+    }
+    user.save()
+
+    return Response({
+        "detail": "Рейтинг оновлено",
+        "added_score": score,
+        "new_rating": user.rating
+    }, status=status.HTTP_200_OK)
