@@ -52,17 +52,6 @@ function Rating() {
       <div className="rating-content">
         <RatingTable />
       </div>
-      
-      <div className="rating-footer">
-        <p>{t('rating.updateMessage')}</p>
-        <div className="stat-card">
-          <FiStar size={24} className="stat-icon" />
-          <div>
-            <h3>{t('rating.yourLevel')}</h3>
-            <p className="stat-value">{t('rating.levels.advanced')}</p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

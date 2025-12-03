@@ -13,6 +13,7 @@ import Lessons from './pages/Lessons/Lessons';
 import Exercise from './pages/Exercise/Exercise';
 import Achievements from './pages/Achievements/Achievements';
 import Rating from './pages/Rating/Rating';
+import Task from './pages/Task/Task';
 
 function RouterApp() {
   return (
@@ -31,6 +32,7 @@ function RouterApp() {
         <Route path="/:lessonId/exercises" element={<Exercise />} />
         <Route path="/achievements" element={<Achievements />} />
         <Route path="/rating" element={<Rating />} />
+        <Route path="/tasks/:exerciseId" element={<Task />} />
       </Route>
     </Routes>
   );

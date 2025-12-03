@@ -13,27 +13,44 @@ function Profile() {
   const { t } = useLanguage();
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}api/profile/${userId}/`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access")}`,
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
+    const fetchUserData = async () => {
+      try {
+        // Fetch user profile
+        const profileResponse = await fetch(`${process.env.REACT_APP_API_URL}api/profile/${userId}/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        });
+        
+        if (!profileResponse.ok) {
           throw new Error(t('profile.userNotFound'));
         }
-        return res.json();
-      })
-      .then((data) => {
-        setUser(data);
+        
+        const profileData = await profileResponse.json();
+        
+        // Fetch user rating
+        const ratingResponse = await fetch(`${process.env.REACT_APP_API_URL}api/rating/`);
+        const ratingData = await ratingResponse.json();
+        
+        // Find the current user in the rating data
+        const userRating = ratingData.find(u => u.id === parseInt(userId));
+        
+        // Merge profile data with rating
+        setUser({
+          ...profileData,
+          rating: userRating ? userRating.rating : 0
+        });
+        
         setLoading(false);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error(t('profile.loadError'), err);
         setError(err.message);
         setLoading(false);
-      });
-  }, [userId]);
+      }
+    };
+    
+    fetchUserData();
+  }, [userId, t]);
 
   const handleLogout = () => {
     AuthService.logout();

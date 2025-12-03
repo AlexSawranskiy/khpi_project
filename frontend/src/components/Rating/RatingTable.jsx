@@ -18,23 +18,34 @@ const RatingTable = () => {
     const fetchRating = async () => {
       try {
         setLoading(true);
+        setError(null);
+        
         const data = await RatingService.getUsersRating();
         
-        if (data && Array.isArray(data)) {
-          // Сортуємо користувачів за рейтингом у спадному порядку
-          const sortedUsers = [...data].sort((a, b) => b.rating - a.rating);
-          // Додаємо позицію в рейтингу
-          const usersWithPosition = sortedUsers.map((user, index) => ({
-            ...user,
-            position: index + 1,
-          }));
-          
-          setUsers(usersWithPosition);
-          setTotalPages(Math.ceil(usersWithPosition.length / itemsPerPage));
-        } else {
-          setUsers([]);
+        if (!Array.isArray(data)) {
+          throw new Error('Отримано некоректні дані з сервера');
         }
-        setError(null);
+        
+        if (data.length === 0) {
+          setUsers([]);
+          setTotalPages(1);
+          return;
+        }
+        
+        // Сортуємо користувачів за рейтингом у спадному порядку
+        const sortedUsers = [...data].sort((a, b) => b.rating - a.rating);
+        
+        // Додаємо позицію в рейтингу та позначаємо поточного користувача
+        const currentUserId = localStorage.getItem('userId');
+        const usersWithPosition = sortedUsers.map((user, index) => ({
+          ...user,
+          position: index + 1,
+          isCurrentUser: user.id.toString() === currentUserId
+        }));
+        
+        setUsers(usersWithPosition);
+        setTotalPages(Math.ceil(usersWithPosition.length / itemsPerPage));
+        
       } catch (err) {
         console.error('Помилка при завантаженні рейтингу:', err);
         setError(err.message || ERROR_MESSAGES.RATING_LOAD_ERROR);
@@ -66,20 +77,61 @@ const RatingTable = () => {
 
   if (loading) {
     return (
-      <div className="rating-loading">
-        <div className="spinner"></div>
-        <p>{t('common.loading')} {t('rating.title')}...</p>
+      <div className="rating-loading" style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '2rem',
+        minHeight: '200px'
+      }}>
+        <div className="spinner" style={{
+          width: '40px',
+          height: '40px',
+          border: '4px solid #f3f3f3',
+          borderTop: '4px solid var(--accent-color, #3498db)',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite',
+          marginBottom: '1rem'
+        }}></div>
+        <p style={{ color: 'var(--text-secondary, #666)' }}>{t('common.loading')} {t('rating.title')}...</p>
+        <style>{
+          `@keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }`
+        }</style>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="rating-error">
-        <p>{error}</p>
+      <div className="rating-error" style={{
+        padding: '2rem',
+        textAlign: 'center',
+        color: '#e74c3c',
+        backgroundColor: '#fde8e8',
+        borderRadius: '8px',
+        margin: '1rem 0',
+        border: '1px solid #f5c6cb'
+      }}>
+        <p style={{ marginBottom: '1rem' }}>{error}</p>
         <button 
           onClick={() => window.location.reload()} 
-          className="retry-button"
+          style={{
+            padding: '0.5rem 1.5rem',
+            backgroundColor: 'var(--accent-color, #3498db)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '0.9rem',
+            transition: 'background-color 0.2s',
+            ':hover': {
+              backgroundColor: '#2980b9'
+            }
+          }}
         >
           {t('common.tryAgain')}
         </button>

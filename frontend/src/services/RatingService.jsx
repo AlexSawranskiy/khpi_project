@@ -9,9 +9,26 @@ const RatingService = {
   getUsersRating: async () => {
     try {
       const response = await api.get('api/rating/');
-      return response.data;
+      if (response.status === 200) {
+        return response.data;
+      }
+      throw new Error('Некоректна відповідь від сервера');
     } catch (error) {
-      return handleError(error, 'Не вдалося завантажити рейтинг користувачів');
+      console.error('Помилка при отриманні рейтингу користувачів:', error);
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error('Дані про помилку:', error.response.data);
+        console.error('Статус помилки:', error.response.status);
+        console.error('Заголовки помилки:', error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('Не отримано відповіді від сервера. Можливо, проблема з мережею або CORS.');
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Помилка при налаштуванні запиту:', error.message);
+      }
+      return [];
     }
   },
 
@@ -22,10 +39,18 @@ const RatingService = {
    */
   getUserRating: async (userId) => {
     try {
-      const response = await api.get(`api/rating/${userId}/`);
-      return response.data;
+      const response = await api.get(`api/rating/`);
+      if (response.status === 200) {
+        const userData = response.data.find(user => user.id === parseInt(userId));
+        if (userData) {
+          return userData;
+        }
+        throw new Error('Користувача не знайдено');
+      }
+      throw new Error('Не вдалося отримати дані рейтингу');
     } catch (error) {
-      return handleError(error, 'Не вдалося завантажити рейтинг користувача');
+      console.error('Помилка при отриманні рейтингу користувача:', error);
+      return null;
     }
   },
 
@@ -37,10 +62,14 @@ const RatingService = {
    */
   updateUserRating: async (userId, points) => {
     try {
-      const response = await api.post(`api/rating/${userId}/update/`, { points });
-      return response.data;
+      const response = await api.post(`api/users/exercise/apply-score/${userId}/`, { score: points });
+      if (response.status === 200) {
+        return response.data;
+      }
+      throw new Error('Не вдалося оновити рейтинг');
     } catch (error) {
-      return handleError(error, 'Не вдалося оновити рейтинг користувача');
+      console.error('Помилка при оновленні рейтингу:', error);
+      return { error: error.message || 'Помилка при оновленні рейтингу' };
     }
   },
 
@@ -51,10 +80,17 @@ const RatingService = {
    */
   getTopUsers: async (limit = 10) => {
     try {
-      const response = await api.get(`api/rating/top/?limit=${limit}`);
-      return response.data;
+      const response = await api.get('api/rating/');
+      if (response.status === 200) {
+        // Сортуємо користувачів за рейтингом у спадному порядку та обмежуємо кількість
+        return response.data
+          .sort((a, b) => b.rating - a.rating)
+          .slice(0, limit);
+      }
+      throw new Error('Не вдалося завантажити топ користувачів');
     } catch (error) {
-      return handleError(error, 'Не вдалося завантажити топ користувачів');
+      console.error('Помилка при отриманні топу користувачів:', error);
+      return [];
     }
   },
 };
