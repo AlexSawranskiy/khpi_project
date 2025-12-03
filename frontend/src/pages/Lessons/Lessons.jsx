@@ -46,8 +46,9 @@ function Lessons() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            "Authorization": `Bearer ${token}`,
           },
+          body: JSON.stringify({})  // Send empty JSON object as body
         }
       );
 
