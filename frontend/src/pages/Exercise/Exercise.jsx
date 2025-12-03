@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./Exercise.css";
 import { toast } from "react-toastify";
@@ -10,14 +10,41 @@ function Exercise() {
   const [completedExercises, setCompletedExercises] = useState([]);
   const navigate = useNavigate();
 
+  const fetchCompletedExercises = useCallback(async () => {
+    const token = localStorage.getItem("access");
+    if (!token) return;
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}courses/user/completed-exercises/`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setCompletedExercises(data.completed_exercises || []);
+      }
+    } catch (error) {
+      console.error("Error fetching completed exercises:", error);
+    }
+  }, []);
+
   useEffect(() => {
     const fetchExercises = async () => {
       try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}courses/${lessonId}/exercises/`
-        );
-        if (!response.ok) throw new Error("Не вдалося завантажити вправи");
-        const data = await response.json();
+        const [exercisesResponse] = await Promise.all([
+          fetch(`${process.env.REACT_APP_API_URL}courses/${lessonId}/exercises/`),
+          fetchCompletedExercises()
+        ]);
+        
+        if (!exercisesResponse.ok) throw new Error("Не вдалося завантажити вправи");
+        
+        const data = await exercisesResponse.json();
         setExercises(data);
       } catch (error) {
         console.error(error);
@@ -28,7 +55,7 @@ function Exercise() {
     };
 
     fetchExercises();
-  }, [lessonId]);
+  }, [lessonId, fetchCompletedExercises]);
 
   const handleComplete = async (exerciseId) => {
     const token = localStorage.getItem("access");
@@ -44,19 +71,30 @@ function Exercise() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            "Authorization": `Bearer ${token}`,
           },
+          body: JSON.stringify({ exercise_id: exerciseId })
         }
       );
 
       if (response.ok) {
         toast.success("Вправу позначено як пройдену ✅");
-        setCompletedExercises((prev) => [...prev, exerciseId]);
+        setCompletedExercises(prev => [...new Set([...prev, exerciseId])]);
+        
+        // Update the exercises list to reflect the completion status
+        setExercises(prev => 
+          prev.map(ex => 
+            ex.id === exerciseId 
+              ? { ...ex, is_completed: true } 
+              : ex
+          )
+        );
       } else {
         const data = await response.json();
         toast.error(data.detail || "Не вдалося позначити вправу");
       }
     } catch (error) {
+      console.error("Error marking exercise as complete:", error);
       toast.error("Помилка підключення до сервера");
     }
   };
